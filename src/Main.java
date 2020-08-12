@@ -21,6 +21,7 @@ public class Main extends JFrame{
 	private JPanel panelBarrelTop;
 	private JLabel lblScore;
 	private int Score = 0;
+	private double friction = 0;
 	/**
 	 * Launch the application.
 	 */
@@ -65,7 +66,6 @@ public class Main extends JFrame{
 			// TODO Auto-generated method stub
 			
 			Detect();
-			Score();
 			
 		}
 	});
@@ -77,6 +77,16 @@ public class Main extends JFrame{
 			// TODO Auto-generated method stub
 			
 			Mapgenerator();
+		}
+	});
+	
+	Thread tcolorchange = new Thread(new Runnable() {
+		
+		@Override
+		public void run() {
+			// TODO Auto-generated method stub
+			
+			colordetect();
 		}
 	});
 	
@@ -127,7 +137,6 @@ public class Main extends JFrame{
 			@Override
 			public void mouseClicked(MouseEvent arg0) {
 				// TODO Auto-generated method stub
-				
 				
 			}
 		});
@@ -182,6 +191,7 @@ public class Main extends JFrame{
 		tmapgenerator.start();
 		tgravity.start();
 		tdetection.start();
+		tcolorchange.start();
 		
 		
 	}
@@ -191,6 +201,7 @@ public class Main extends JFrame{
 		if (panelPlayer.getY()-40 >= 0) {
 			
 			panelPlayer.setBounds(200,panelPlayer.getY()-40, 50, 50);
+			friction = 0;
 			
 		} else {}
 		
@@ -204,16 +215,18 @@ public class Main extends JFrame{
 			
 			while(true) {
 				
-				if (panelPlayer.getY()<401) {
+				if (panelPlayer.getY()<390) {
 					
-					Thread.sleep(10);
+					Thread.sleep(20);
 //					System.out.println(playerPanel.getY());
 					Scoreposition();
-					panelPlayer.setBounds(200, panelPlayer.getY()+1, 50, 50);
+					friction();
+					panelPlayer.setBounds(200, panelPlayer.getY()+(int)friction, 50, 50);
 					
 				} else {
 					
-					panelPlayer.setBounds(200, 400, 50, 50);
+					panelPlayer.setBounds(200, 389, 50, 50);
+					friction = 0;
 					
 				}
 			}
@@ -243,7 +256,6 @@ public class Main extends JFrame{
 						panelBarrelTop.setBackground(Color.RED);
 						
 					} else {
-						
 						
 					}
 					
@@ -344,16 +356,21 @@ public class Main extends JFrame{
 		
 	}
 	
-	private void Score() {
+	private void friction() {
+		
+		friction = friction + 0.25;
+	}
+	
+	private void colordetect() {
 		
 		if (panelPlayer.getX() == panelBarrelBottom.getX()) {
-		
-			Score = Score+1;
-			lblScore.setText("Score: " +Score);
+			
+			System.out.println("Fall 1");
 			
 		} else {
 			
+			System.out.println("Fall 2");
 		}
-		
 	}
+		
 }
